@@ -1,0 +1,17 @@
+node_modules
+.turbo
+dist
+.output
+.vinxi
+.tanstack
+generated
+.env
+*.log
+.DS_Store
+coverage
+.expo
+ios
+android
+*.tsbuildinfo
+.prisma
+.vscode

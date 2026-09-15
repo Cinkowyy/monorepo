@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+nodeLinker: hoisted
+allowBuilds:
+  "@prisma/engines": true
+  esbuild: true
+  prisma: true
+overrides:
+  react: 19.2.3
+  react-dom: 19.2.3

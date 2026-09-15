@@ -1,0 +1,27 @@
+{
+  "name": "monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.2",
+  "scripts": {
+    "dev:api": "turbo run dev --filter=@app/api",
+    "dev:web": "turbo run dev --filter=@app/web",
+    "mobile": "pnpm --filter @app/mobile start",
+    "android": "pnpm --filter @app/mobile android",
+    "ios": "pnpm --filter @app/mobile ios",
+    "build": "turbo run build",
+    "lint": "pnpm biome check .",
+    "format": "pnpm biome check --write .",
+    "db:generate": "pnpm --filter @app/db exec prisma generate",
+    "db:migrate": "pnpm --filter @app/db exec prisma migrate dev",
+    "db:deploy": "pnpm --filter @app/db db:deploy",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "postinstall": "pnpm db:generate"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.8",
+    "turbo": "^2.7.2",
+    "typescript": "^5.9.3"
+  }
+}
