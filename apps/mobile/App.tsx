@@ -14,14 +14,12 @@ import {
 } from "react-native";
 import { apiUrl } from "./src/config";
 
-type Property = PropertiesContractTypes["getProperties"]["output"][number];
-
 const queryClient = new QueryClient();
 
 function PropertiesList() {
   const propertiesQuery = useQuery({
     queryKey: ["properties"],
-    queryFn: async (): Promise<Property[]> => {
+    queryFn: async (): Promise<PropertiesContractTypes["getProperties"]["output"]> => {
       const response = await fetch(`${apiUrl}/properties`);
 
       if (!response.ok) {
