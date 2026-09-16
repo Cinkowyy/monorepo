@@ -1,4 +1,4 @@
-import type { PropertiesContractTypes } from "@app/core/properties";
+import type { PropertiesContractTypes } from "@app/core/properties/contract";
 import {
   QueryClient,
   QueryClientProvider,
@@ -19,7 +19,9 @@ const queryClient = new QueryClient();
 function PropertiesList() {
   const propertiesQuery = useQuery({
     queryKey: ["properties"],
-    queryFn: async (): Promise<PropertiesContractTypes["getProperties"]["output"]> => {
+    queryFn: async (): Promise<
+      PropertiesContractTypes["getProperties"]["output"]
+    > => {
       const response = await fetch(`${apiUrl}/properties`);
 
       if (!response.ok) {

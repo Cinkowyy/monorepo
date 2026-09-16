@@ -9,6 +9,10 @@
     "./*": {
       "types": "./src/*.ts",
       "default": "./src/*.ts"
+    },
+    "./*/*": {
+      "types": "./src/*/*.ts",
+      "default": "./src/*/*.ts"
     }
   },
   "scripts": {
