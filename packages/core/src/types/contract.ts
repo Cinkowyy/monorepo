@@ -1,8 +1,12 @@
 import type { z } from "zod";
 
+type PathBuilder = {
+  looseArgs(...pathParams: unknown[]): string;
+}["looseArgs"];
+
 export type ApiEndpointContractItem = {
   expressPath: string;
-  getPath: (...args: any[]) => string;
+  getPath: PathBuilder;
   input?: z.ZodObject<{
     query?: z.ZodType;
     body?: z.ZodType;
