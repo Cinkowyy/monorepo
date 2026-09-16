@@ -12,51 +12,43 @@ import {
   View,
 } from "react-native";
 import { apiUrl } from "./src/config";
+import type { PropertiesContractTypes } from "@app/core";
 
-type Building = {
-  id: number;
-  name: string;
-  address: string | null;
-};
+type Property = PropertiesContractTypes["getProperties"]["output"];
 
 const queryClient = new QueryClient();
 
-function BuildingsList() {
-  const buildingsQuery = useQuery({
-    queryKey: ["buildings"],
-    queryFn: async (): Promise<Building[]> => {
-      const response = await fetch(`${apiUrl}/buildings`);
+function PropertiesList() {
+  const propertiesQuery = useQuery({
+    queryKey: ["properties"],
+    queryFn: async (): Promise<Property[]> => {
+      const response = await fetch(`${apiUrl}/properties`);
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch buildings (${response.status})`);
+        throw new Error(`Failed to fetch properties (${response.status})`);
       }
 
       return response.json();
     },
   });
 
-  if (buildingsQuery.isPending) {
+  if (propertiesQuery.isPending) {
     return <ActivityIndicator />;
   }
 
-  if (buildingsQuery.isError) {
-    return <Text>Could not load buildings from {apiUrl}.</Text>;
+  if (propertiesQuery.isError) {
+    return <Text>Could not load properties from {apiUrl}.</Text>;
   }
 
-  if (buildingsQuery.data.length === 0) {
-    return <Text>No buildings yet.</Text>;
+  if (propertiesQuery.data.length === 0) {
+    return <Text>No properties yet.</Text>;
   }
 
   return (
     <FlatList
-      data={buildingsQuery.data}
+      data={propertiesQuery.data}
       keyExtractor={(item) => String(item.id)}
-      renderItem={({ item }) => (
-        <Text style={styles.item}>
-          {item.name}
-          {item.address ? ` — ${item.address}` : ""}
-        </Text>
-      )}
+      renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
     />
   );
 }
@@ -65,8 +57,8 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <View style={styles.container}>
-        <Text style={styles.title}>Buildings</Text>
-        <BuildingsList />
+        <Text style={styles.title}>Properties</Text>
+        <PropertiesList />
         <StatusBar style="auto" />
       </View>
     </QueryClientProvider>

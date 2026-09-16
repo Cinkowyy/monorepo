@@ -14,5 +14,5 @@ if (!connectionString) {
 const adapter = new PrismaPg({ connectionString });
 
 export const prisma = new PrismaClient({ adapter });
-export type { Building, User } from "../generated/client.js";
+export type { properties, users } from "../generated/client.js";
 export { PrismaClient };

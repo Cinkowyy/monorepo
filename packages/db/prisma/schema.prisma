@@ -7,23 +7,20 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  name      String?
-  buildings Building[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+model users {
+  id              Int          @id @default(autoincrement())
+  email           String?      @db.VarChar(512)
+  emailVerifiedAt DateTime?    @map("email_verified_at") @db.Timestamptz(6)
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  properties      properties[]
 }
 
-model Building {
+model properties {
   id        Int      @id @default(autoincrement())
-  name      String
-  address   String?
-  userId    Int?
-  user      User?    @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
+  name      String   @db.VarChar(256)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  ownerId   Int      @map("owner_id")
+  owner     users    @relation(fields: [ownerId], references: [id])
 }

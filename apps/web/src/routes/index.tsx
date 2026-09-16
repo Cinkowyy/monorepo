@@ -1,31 +1,28 @@
-import { buildingService } from "@app/core";
+import { propertiesService } from "@app/core";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
-const getBuildings = createServerFn({ method: "GET" }).handler(() => {
-  return buildingService.list();
+const getProperties = createServerFn({ method: "GET" }).handler(() => {
+  return propertiesService.getProperties();
 });
 
 export const Route = createFileRoute("/")({
-  loader: () => getBuildings(),
+  loader: () => getProperties(),
   component: Home,
 });
 
 function Home() {
-  const buildings = Route.useLoaderData();
+  const properties = Route.useLoaderData();
 
   return (
     <main>
-      <h1>Buildings</h1>
-      {buildings.length === 0 ? (
-        <p>No buildings yet.</p>
+      <h1>Properties</h1>
+      {properties.length === 0 ? (
+        <p>No properties yet.</p>
       ) : (
         <ul>
-          {buildings.map((building) => (
-            <li key={building.id}>
-              {building.name}
-              {building.address ? ` — ${building.address}` : null}
-            </li>
+          {properties.map((property) => (
+            <li key={property.id}>{property.name}</li>
           ))}
         </ul>
       )}

@@ -1,3 +1,11 @@
-export type { CreateBuildingInput } from "./building.js";
-export { buildingService, createBuildingSchema } from "./building.js";
-export { ensureBucket, getStorage } from "./storage.js";
+import { prisma } from "@app/db";
+import { PropertiesService } from "./properties.js";
+
+export type { PropertiesContractTypes } from "./properties.js";
+export { PropertiesService, propertiesContract } from "./properties.js";
+export type {
+  ApiEndpointContract,
+  InferContractTypes,
+} from "./types/contract.js";
+
+export const propertiesService = new PropertiesService(prisma);
