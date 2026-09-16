@@ -1,4 +1,4 @@
-import { propertiesContract, propertiesService } from "@app/core";
+import { propertiesContract, propertiesService } from "@app/core/properties";
 import cors from "cors";
 import express from "express";
 

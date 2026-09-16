@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { config } from "dotenv";
-import { PrismaClient } from "../generated/client.js";
+import { PrismaClient } from "../generated/client";
 
 config({ path: resolve(import.meta.dirname, "../../../.env") });
 
@@ -14,5 +14,5 @@ if (!connectionString) {
 const adapter = new PrismaPg({ connectionString });
 
 export const prisma = new PrismaClient({ adapter });
-export type { properties, users } from "../generated/client.js";
+export type { properties, users } from "../generated/client";
 export { PrismaClient };

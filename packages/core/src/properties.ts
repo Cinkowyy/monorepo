@@ -1,9 +1,6 @@
-import type { PrismaClient } from "@app/db";
+import { type PrismaClient, prisma } from "@app/db/client";
 import z from "zod";
-import type {
-  ApiEndpointContract,
-  InferContractTypes,
-} from "./types/contract.js";
+import type { ApiEndpointContract, InferContractTypes } from "./types/contract";
 
 export const propertiesContract = {
   getProperties: {
@@ -58,3 +55,5 @@ export class PropertiesService {
     return property;
   }
 }
+
+export const propertiesService = new PropertiesService(prisma);

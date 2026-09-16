@@ -1,4 +1,4 @@
-import { propertiesService } from "@app/core";
+import { propertiesService } from "@app/core/properties";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 

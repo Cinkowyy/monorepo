@@ -1,3 +1,4 @@
+import type { PropertiesContractTypes } from "@app/core/properties";
 import {
   QueryClient,
   QueryClientProvider,
@@ -12,9 +13,8 @@ import {
   View,
 } from "react-native";
 import { apiUrl } from "./src/config";
-import type { PropertiesContractTypes } from "@app/core";
 
-type Property = PropertiesContractTypes["getProperties"]["output"];
+type Property = PropertiesContractTypes["getProperties"]["output"][number];
 
 const queryClient = new QueryClient();
 
