@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTRPC } from "../trpc/react";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
-      context.trpc.properties.list.queryOptions(),
-    );
+    await context.queryClient.query({
+      ...context.trpc.properties.list.queryOptions(),
+      staleTime: "static",
+    });
   },
   component: Home,
 });
@@ -43,7 +44,14 @@ function Home() {
       ) : (
         <ul>
           {properties.map((property) => (
-            <li key={property.id}>{property.name}</li>
+            <li key={property.id}>
+              <Link
+                to="/properties/$propertyId"
+                params={{ propertyId: String(property.id) }}
+              >
+                {property.name}
+              </Link>
+            </li>
           ))}
         </ul>
       )}

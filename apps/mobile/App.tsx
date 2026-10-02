@@ -10,15 +10,21 @@ import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import superjson from "superjson";
 import { apiUrl } from "./src/config";
+import { isTrpcNotFound } from "./src/errors";
 import { TRPCProvider, useTRPC } from "./src/trpc";
 
-function PropertiesList() {
+function PropertiesList({
+  onSelect,
+}: {
+  onSelect: (id: number) => void;
+}) {
   const trpc = useTRPC();
   const propertiesQuery = useQuery(trpc.properties.list.queryOptions());
 
@@ -44,12 +50,66 @@ function PropertiesList() {
     <FlatList
       data={propertiesQuery.data}
       keyExtractor={(item) => String(item.id)}
-      renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
+      renderItem={({ item }) => (
+        <Pressable onPress={() => onSelect(item.id)}>
+          <Text style={styles.item}>{item.name}</Text>
+        </Pressable>
+      )}
     />
   );
 }
 
+function PropertyDetail({
+  id,
+  onBack,
+}: {
+  id: number;
+  onBack: () => void;
+}) {
+  const trpc = useTRPC();
+  const propertyQuery = useQuery(trpc.properties.byId.queryOptions({ id }));
+
+  if (propertyQuery.isPending) {
+    return <ActivityIndicator />;
+  }
+
+  if (propertyQuery.isError) {
+    if (isTrpcNotFound(propertyQuery.error)) {
+      return (
+        <View>
+          <Text style={styles.title}>Nie znaleziono</Text>
+          <Text>Property o ID {id} nie istnieje.</Text>
+          <Pressable onPress={onBack}>
+            <Text style={styles.link}>Wróć do listy</Text>
+          </Pressable>
+        </View>
+      );
+    }
+
+    return (
+      <View>
+        <Text>Could not load property.</Text>
+        <Text>{propertyQuery.error.message}</Text>
+        <Pressable onPress={onBack}>
+          <Text style={styles.link}>Wróć do listy</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      <Pressable onPress={onBack}>
+        <Text style={styles.link}>← Properties</Text>
+      </Pressable>
+      <Text style={styles.title}>{propertyQuery.data.name}</Text>
+      <Text>ID: {propertyQuery.data.id}</Text>
+    </View>
+  );
+}
+
 export default function App() {
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -75,8 +135,17 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
         <View style={styles.container}>
-          <Text style={styles.title}>Properties</Text>
-          <PropertiesList />
+          {selectedId === null ? (
+            <>
+              <Text style={styles.title}>Properties</Text>
+              <PropertiesList onSelect={setSelectedId} />
+            </>
+          ) : (
+            <PropertyDetail
+              id={selectedId}
+              onBack={() => setSelectedId(null)}
+            />
+          )}
           <StatusBar style="auto" />
         </View>
       </TRPCProvider>
@@ -100,5 +169,10 @@ const styles = StyleSheet.create({
   item: {
     fontSize: 16,
     marginBottom: 8,
+  },
+  link: {
+    fontSize: 16,
+    marginBottom: 16,
+    textDecorationLine: "underline",
   },
 });

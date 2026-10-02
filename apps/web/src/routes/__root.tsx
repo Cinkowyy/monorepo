@@ -19,6 +19,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { title: "Monorepo" },
     ],
   }),
+  notFoundComponent: () => (
+    <main>
+      <h1>Nie znaleziono</h1>
+      <p>Ta strona nie istnieje.</p>
+    </main>
+  ),
   component: RootComponent,
 });
 
