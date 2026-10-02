@@ -1,14 +1,22 @@
-import { propertiesService } from "@app/core/properties/service";
+import { prisma } from "@app/db/client";
 import { z } from "zod";
 import { publicProcedure, router } from "../init";
 
 export const propertiesRouter = router({
   list: publicProcedure.query(() => {
-    return propertiesService.getProperties();
+    return prisma.properties.findMany();
   }),
   byId: publicProcedure
     .input(z.object({ id: z.number().int().positive() }))
-    .query(({ input }) => {
-      return propertiesService.getPropertyById(input.id);
+    .query(async ({ input }) => {
+      const property = await prisma.properties.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!property) {
+        throw new Error("Property not found");
+      }
+
+      return property;
     }),
 });
