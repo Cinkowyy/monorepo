@@ -4,8 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@12.4.2",
   "scripts": {
-    "dev:api": "turbo run dev --filter=@app/api",
-    "dev:web": "turbo run dev --filter=@app/web",
+    "dev": "turbo run dev --filter=@app/web",
     "mobile": "pnpm --filter @app/mobile start",
     "android": "pnpm --filter @app/mobile android",
     "ios": "pnpm --filter @app/mobile ios",

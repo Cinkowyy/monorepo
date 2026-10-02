@@ -10,12 +10,15 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
-    "@app/core": "workspace:*",
+    "@app/trpc": "workspace:*",
     "@tanstack/react-query": "^5.90.12",
+    "@trpc/client": "^11.7.1",
+    "@trpc/tanstack-react-query": "^11.7.1",
     "expo": "~57.0.22",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
-    "react-native": "0.86.3"
+    "react-native": "0.86.3",
+    "superjson": "^2.2.2"
   },
   "devDependencies": {
     "@app/tsconfig": "workspace:*",

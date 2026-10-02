@@ -3,16 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "./src/client.ts",
-  "types": "./src/client.ts",
   "exports": {
-    "./*": {
-      "types": "./src/*.ts",
-      "default": "./src/*.ts"
-    },
-    "./*/*": {
-      "types": "./src/*/*.ts",
-      "default": "./src/*/*.ts"
+    "./client": {
+      "types": "./src/client.ts",
+      "import": "./src/client.ts",
+      "default": "./src/client.ts"
     }
   },
   "scripts": {

@@ -1,10 +1,12 @@
-import type { PropertiesContractTypes } from "@app/core/properties/contract";
+import type { AppRouter } from "@app/trpc/router";
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -12,32 +14,26 @@ import {
   Text,
   View,
 } from "react-native";
+import superjson from "superjson";
 import { apiUrl } from "./src/config";
-
-const queryClient = new QueryClient();
+import { TRPCProvider, useTRPC } from "./src/trpc";
 
 function PropertiesList() {
-  const propertiesQuery = useQuery({
-    queryKey: ["properties"],
-    queryFn: async (): Promise<
-      PropertiesContractTypes["getProperties"]["output"]
-    > => {
-      const response = await fetch(`${apiUrl}/properties`);
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch properties (${response.status})`);
-      }
-
-      return response.json();
-    },
-  });
+  const trpc = useTRPC();
+  const propertiesQuery = useQuery(trpc.properties.list.queryOptions());
 
   if (propertiesQuery.isPending) {
     return <ActivityIndicator />;
   }
 
   if (propertiesQuery.isError) {
-    return <Text>Could not load properties from {apiUrl}.</Text>;
+    return (
+      <Text>
+        Could not load properties from {apiUrl}/api/trpc
+        {"\n"}
+        {propertiesQuery.error.message}
+      </Text>
+    );
   }
 
   if (propertiesQuery.data.length === 0) {
@@ -54,13 +50,36 @@ function PropertiesList() {
 }
 
 export default function App() {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60_000,
+          },
+        },
+      }),
+  );
+  const [trpcClient] = useState(() =>
+    createTRPCClient<AppRouter>({
+      links: [
+        httpBatchLink({
+          url: `${apiUrl}/api/trpc`,
+          transformer: superjson,
+        }),
+      ],
+    }),
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Properties</Text>
-        <PropertiesList />
-        <StatusBar style="auto" />
-      </View>
+      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Properties</Text>
+          <PropertiesList />
+          <StatusBar style="auto" />
+        </View>
+      </TRPCProvider>
     </QueryClientProvider>
   );
 }

@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./*": {
-      "types": "./src/*.ts",
-      "default": "./src/*.ts"
+    "./properties/service": {
+      "types": "./src/properties/service.ts",
+      "import": "./src/properties/service.ts",
+      "default": "./src/properties/service.ts"
     },
-    "./*/*": {
-      "types": "./src/*/*.ts",
-      "default": "./src/*/*.ts"
+    "./properties/*": {
+      "types": "./src/properties/*.ts",
+      "import": "./src/properties/*.ts",
+      "default": "./src/properties/*.ts"
     }
   },
   "scripts": {
