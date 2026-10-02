@@ -1,4 +1,5 @@
 import { prisma } from "@app/db/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { publicProcedure, router } from "../init";
 
@@ -14,7 +15,10 @@ export const propertiesRouter = router({
       });
 
       if (!property) {
-        throw new Error("Property not found");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Property not found",
+        });
       }
 
       return property;
